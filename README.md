@@ -5,14 +5,30 @@ Python3 interface to the Trackr API
 import time
 import pytrackr
 
-pytrackr.authenticate('email adress here', 'password here')
+def output_device_states():
+    for device in devices:
+        print("Custom name: " + device.name())
+        print("Location: " + str(device.last_known_location()))
+        print("Last time seen: " + str(device.last_time_seen()))
+        print("Tracker ID: " + str(device.tracker_id()))
+        print("Type: " + str(device.type()))
+        print("Last upadted: " + str(device.last_updated()))
+        print("Battery level: " + str(device.battery_level()))
+        print("\n")
+
+def update_states():
+    # calling update on one device will update every device
+    devices[0].update_state_from_api()
+
+email = input("Enter your trackr email: ")
+password = input("Enter your trackr password: ")
+pytrackr.authenticate(email, password)
 devices = pytrackr.get_trackrs()
-
-for device in devices:
-    print(device.name())
-    print(str(device.last_known_location()))
-    time.sleep(60)
-    device.update_state_from_api()
-    print(str(device.last_known_location()))
-
+output_device_states()
+print("\n\nMove your phone/trackr so the location can change.")
+print("Sleeping for 2 minutes for a device update. Not sure how long it takes.")
+print("Try force closing the app and re-opening it, that should force a location update.")
+time.sleep(120)
+update_states()
+output_device_states()
 ```

@@ -25,7 +25,8 @@ print("\n\nMove your phone/trackr so the location can change.")
 print("Sleeping for 2 minutes for a device update. Not sure how long it takes.")
 print("Try force closing the app and re-opening it, that should force a location update.")
 time.sleep(120)
-out_device_states()
+update_states()
+output_device_states()
 
 
 
