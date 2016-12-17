@@ -3,10 +3,10 @@ Python3 interface to the Trackr API
 
 ```python
 import time
-import trackr
+import pytrackr
 
-trackr.authenticate('email adress here', 'password here')
-devices = trackr.get_trackrs()
+pytrackr.authenticate('email adress here', 'password here')
+devices = pytrackr.get_trackrs()
 
 for device in devices:
     print(device.name())
