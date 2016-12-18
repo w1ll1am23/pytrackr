@@ -1,55 +1,88 @@
-import json
+import logging
+import datetime
+
 import requests
 
 from pytrackr.device import trackrDevice
 
+
 BASE_URL = "https://phonehalocloud.appspot.com"
-EMAIL = None
-PASSWORD = None
-TOKEN = None
-LAST_JSON_STATE = None
-API_INTERFACE = None
+_LOGGER = logging.getLogger(__name__)
 
 
 class trackrApiInterface(object):
+    """
+    API interface object.
+    """
+
+    def __init__(self, email, password):
+        """
+        Create the Trackr API interface object.
+        Args:
+            email (str): Trackr account email address.
+            password (str): Trackrr account password.
+        """
+        self.email = email
+        self.password = password
+        self.token = None
+        self.last_api_call = None
+        # get a token
+        self.authenticate()
+        # get the latest state from the API
+        self.update_state_from_api()
 
     def update_state_from_api(self):
-        global LAST_JSON_STATE
-        url = BASE_URL + "/rest/item"
-        payload = {'usertoken': TOKEN}
-        r = requests.get(url, params=payload)
-        if r.status_code == 401:
-            print("Token expired? Trying to get a new one.")
-            authenticate(EMAIL, PASSWORD)
-            r = requests.get(url, params=payload)
-        LAST_JSON_STATE = r.json()
-        return LAST_JSON_STATE
+        """
+        Pull and update the current state from the API.
+        """
+        if self.last_api_call is not None:
+            difference = (datetime.datetime.now() - self.last_api_call).seconds
+        else:
+            # This is the first run, so we need to get the lastest state.
+            difference = 301
+        if difference >= 300:
+            url = BASE_URL + "/rest/item"
+            payload = {'usertoken': self.token}
+            arequest = requests.get(url, params=payload)
+            status = arequest.status_code
+            if status == 401:
+                _LOGGER.info("Token expired? Trying to get a new one.")
+                self.authenticate(True)
+                arequest = requests.get(url, params=payload)
+                status = arequest.status_code
+            if status != 200:
+                _LOGGER.error("API error not updating state. " + status)
+            else:
+                self.state = arequest.json()
+            self.last_api_call = datetime.datetime.now()
+            _LOGGER.info("Pulled latest state from API.")
         
 
-def authenticate(email, password):
-    """
-    Get a token.
-    """
-    global TOKEN, EMAIL, PASSWORD, API_INTERFACE
-    EMAIL = email
-    PASSWORD = password
-    auth_url = BASE_URL + "/rest/user"
-    payload = {'email': email, 'password': password}
-    r = requests.get(auth_url, params=payload)
-    token = r.json().get('usertoken')
-    if token is not None:
-        TOKEN = r.json().get('usertoken')
-        API_INTERFACE = trackrApiInterface()
-        API_INTERFACE.update_state_from_api()
-    else:
-        print("Failed to get token")
+    def authenticate(self, reauth=False):
+        """
+        Authenticate with the API and return an authentication token.
+        """
+        auth_url = BASE_URL + "/rest/user"
+        payload = {'email': self.email, 'password': self.password}
+        arequest = requests.get(auth_url, params=payload)
+        status = arequest.status_code
+        if status != 200:
+            if reauth:
+                _LOGGER.error("Reauthentication request failed. " + status)
+            else:
+                _LOGGER.error("Authentication request failed, please check credintials. " + status)
+        self.token = arequest.json().get('usertoken')
+        if reauth:
+            _LOGGER.info("Reauthentication was successful, token updated.")
+        else:
+            _LOGGER.info("Authentication was successful, token set.")
 
-def get_trackrs():
-    return _create_devices_from_response_dict(LAST_JSON_STATE)
-
-def _create_devices_from_response_dict(response_dict):
-
-    trackrs = []
-    for trackr in response_dict:
-        trackrs.append(trackrDevice(trackr, API_INTERFACE))
-    return trackrs
+    def get_trackrs(self):
+        """
+        Extract each Trackr device from the trackrApiInterface state.
+        return a list of all Trackr objects from account.
+        """
+        trackrs = []
+        for trackr in self.state:
+            trackrs.append(trackrDevice(trackr, self))
+        return trackrs

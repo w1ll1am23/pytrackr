@@ -1,4 +1,3 @@
-import json
 
 class trackrDevice(object):
 
@@ -30,8 +29,8 @@ class trackrDevice(object):
         """
         return self.json_state.get('lastKnownLocation', None)
 
-    def update_state_from_api(self):
-        api_response = self.api_interface.update_state_from_api()
-        for device in api_response:
+    def update_state(self):
+        self.api_interface.update_state_from_api()
+        for device in self.api_interface.state:
             if device.get('trackerId') == self.tracker_id():
                 self.json_state = device

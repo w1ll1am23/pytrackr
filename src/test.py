@@ -1,5 +1,5 @@
 import time
-import pytrackr
+from pytrackr.api import trackrApiInterface
 
 def output_device_states():
     for device in devices:
@@ -13,13 +13,14 @@ def output_device_states():
         print("\n")
 
 def update_states():
-    # calling update on one device will update every device
+    # calling update on one device will update the api interface
+    # dictionary which stores all devices states.
     devices[0].update_state_from_api()
 
 email = input("Enter your trackr email: ")
 password = input("Enter your trackr password: ")
-pytrackr.authenticate(email, password)
-devices = pytrackr.get_trackrs()
+trackr_api = trackrApiInterface(email, password)
+devices = trackr_api.get_trackrs()
 output_device_states()
 print("\n\nMove your phone/trackr so the location can change.")
 print("Sleeping for 2 minutes for a device update. Not sure how long it takes.")
