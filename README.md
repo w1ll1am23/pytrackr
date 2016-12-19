@@ -1,5 +1,7 @@
 # pytrackr
-Python3 interface to the TrackR API
+Python3 interface to the TrackR API.
+
+**NOTE** TrackR has no official API therefore this library could stop working at any time, without warning.
 
 ```python
 from pytrackr.api import trackrApiInterface
