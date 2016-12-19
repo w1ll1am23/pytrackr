@@ -1,3 +1,4 @@
+import datetime
 
 class trackrDevice(object):
 
@@ -12,13 +13,21 @@ class trackrDevice(object):
         return self.json_state.get('trackerId', None)
 
     def last_time_seen(self):
+        "ex. Mon Dec 19 17:57:06 UTC 2016"
         return self.json_state.get('lastTimeSeen', None)
 
-    def type(self):
-        return self.json_state.get('type', None)
-
     def last_updated(self):
-        return self.json_state.get('lastUpdated', None)
+        # This is in Epoch time * 1000. (milliseconds)
+        # ex. 1482007969200
+        # Converting to match format of last_time_seen.
+        last_update = int(self.json_state.get('lastUpdated', None))
+        dt = datetime.datetime.utcfromtimestamp(last_update/1000.)
+        return dt.strftime('%a %b %d %H:%M:%S UTC %Y')
+        
+    def trackr_type(self):
+        # Not sure what this is? TrackR Bravo responses with
+        # a value of bluetooth.
+        return self.json_state.get('type', None)
 
     def battery_level(self):
         return self.json_state.get('batteryLevel', None)
