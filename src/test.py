@@ -7,9 +7,14 @@ def output_device_states():
         print("Location: " + str(device.last_known_location()))
         print("Last time seen: " + str(device.last_time_seen()))
         print("Tracker ID: " + str(device.tracker_id()))
+        print("ID: " + str(device.id()))
         print("Type: " + str(device.trackr_type()))
         print("Last upadted: " + str(device.last_updated()))
         print("Battery level: " + str(device.battery_level()))
+        print("Icon: " + str(device.icon()))
+        print("Time updated diff: " + str(device.time_updated_diff()))
+        print("Group item: " + str(device.group_item()))
+        print("Lost: " + str(device.lost()))
         print("\n")
 
 def update_states():

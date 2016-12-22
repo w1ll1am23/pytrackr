@@ -1,5 +1,8 @@
 # Change log
 
+## 0.0.5
+- Added more API fields. (id, owners email, lost, update diff, group item..)
+
 ## 0.0.4
 - Add option to return full JSON state and fix status check.
 

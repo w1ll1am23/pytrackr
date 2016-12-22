@@ -13,6 +13,30 @@ class trackrDevice(object):
     def tracker_id(self):
         return self.json_state.get('trackerId', None)
 
+    def ownership_order(self):
+        return self.json_state.get('ownershipOrder', None)
+
+    def id(self):
+        return self.json_state.get('id', None)
+
+    def icon(self):
+        return self.json_state.get('icon', None)
+
+    def time_updated_diff(self):
+        # What format is this is?
+        return self.json_state.get('timeUpdatedDiff', None)
+
+    def owners_email(self):
+        return self.json_state.get('ownersEmail', None)
+
+    def group_item(self):
+        # Is this trackr part of a group?
+        return self.json_state.get('groupItem', False)
+
+    def lost(self):
+        # Was this trackr reported as lost?
+        return self.json_state.get('lost', False)
+
     def last_time_seen(self):
         "ex. Mon Dec 19 17:57:06 UTC 2016"
         return self.json_state.get('lastTimeSeen', None)
