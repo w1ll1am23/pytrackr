@@ -7,13 +7,18 @@ Python3 interface to the TrackR API.
 from pytrackr.api import trackrApiInterface
 
 trackr_api = trackrApiInterface("YOUR EMAIL", "YOUR PASSWORD")
+
+# This will dump the state from the API
+state = str(trackr_api.dump_state())
+print(state)
+
 device = trackr_api.get_trackrs()[0]
 
-print("Custom name: " + device.name())
+print("Custom name: " + str(device.name()))
 print("Location: " + str(device.last_known_location()))
 print("Last time seen: " + str(device.last_time_seen()))
 print("Tracker ID: " + str(device.tracker_id()))
-print("Type: " + str(device.type()))
+print("Type: " + str(device.trackr_type()))
 print("Last upadted: " + str(device.last_updated()))
 print("Battery level: " + str(device.battery_level()))
 print("\n")

@@ -45,14 +45,14 @@ class trackrApiInterface(object):
             payload = {'usertoken': self.token}
             arequest = requests.get(url, params=payload)
             status = str(arequest.status_code)
-            if status == 401:
+            if status == '401':
                 _LOGGER.info("Token expired? Trying to get a new one.")
                 self.authenticate(True)
                 arequest = requests.get(url, params=payload)
                 status = arequest.status_code
-            elif status != 404:
+            elif status == '404':
                 _LOGGER.error("No devices associated with this account.")
-            elif status != 200:
+            elif status != '200':
                 _LOGGER.error("API error not updating state. " + status)
             else:
                 self.state = arequest.json()
@@ -87,3 +87,9 @@ class trackrApiInterface(object):
         for trackr in self.state:
             trackrs.append(trackrDevice(trackr, self))
         return trackrs
+
+    def dump_state(self):
+        """
+        Return the JSON state from the last API poll.
+        """
+        return self.state

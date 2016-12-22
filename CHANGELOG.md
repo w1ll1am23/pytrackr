@@ -1,5 +1,8 @@
 # Change log
 
+## 0.0.4
+- Add option to return full JSON state and fix status check.
+
 ## 0.0.3
 - Default state to empty list for accounts with no devices.
 
