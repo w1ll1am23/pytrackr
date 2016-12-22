@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(name='pytrackr',
-      version='0.0.2',
-      description='Interface to the Trackr API',
+      version='0.0.3',
+      description='Interface to the TrackR API',
       url='http://github.com/w1ll1am23/pytrackr',
       author='William Scanlon',
       license='MIT',
