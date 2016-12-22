@@ -3,7 +3,7 @@ from pytrackr.api import trackrApiInterface
 
 def output_device_states():
     for device in devices:
-        print("Custom name: " + device.name())
+        print("Custom name: " + str(device.name()))
         print("Location: " + str(device.last_known_location()))
         print("Last time seen: " + str(device.last_time_seen()))
         print("Tracker ID: " + str(device.tracker_id()))

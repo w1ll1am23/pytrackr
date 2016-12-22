@@ -1,5 +1,6 @@
 import datetime
 
+
 class trackrDevice(object):
 
     def __init__(self, device_state_as_json, api_interface):
@@ -23,7 +24,7 @@ class trackrDevice(object):
         last_update = int(self.json_state.get('lastUpdated', None))
         dt = datetime.datetime.utcfromtimestamp(last_update/1000.)
         return dt.strftime('%a %b %d %H:%M:%S UTC %Y')
-        
+
     def trackr_type(self):
         # Not sure what this is? TrackR Bravo responses with
         # a value of bluetooth.

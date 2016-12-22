@@ -5,7 +5,6 @@ import requests
 
 from pytrackr.device import trackrDevice
 
-
 BASE_URL = "https://phonehalocloud.appspot.com"
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,6 +25,7 @@ class trackrApiInterface(object):
         self.password = password
         self.token = None
         self.last_api_call = None
+        self.state = []
         # get a token
         self.authenticate()
         # get the latest state from the API
@@ -44,19 +44,20 @@ class trackrApiInterface(object):
             url = BASE_URL + "/rest/item"
             payload = {'usertoken': self.token}
             arequest = requests.get(url, params=payload)
-            status = arequest.status_code
+            status = str(arequest.status_code)
             if status == 401:
                 _LOGGER.info("Token expired? Trying to get a new one.")
                 self.authenticate(True)
                 arequest = requests.get(url, params=payload)
                 status = arequest.status_code
-            if status != 200:
+            elif status != 404:
+                _LOGGER.error("No devices associated with this account.")
+            elif status != 200:
                 _LOGGER.error("API error not updating state. " + status)
             else:
                 self.state = arequest.json()
             self.last_api_call = datetime.datetime.now()
             _LOGGER.info("Pulled latest state from API.")
-        
 
     def authenticate(self, reauth=False):
         """
