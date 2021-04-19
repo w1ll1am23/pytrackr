@@ -5,7 +5,7 @@ import requests
 
 from pytrackr.device import trackrDevice
 
-BASE_URL = "https://phonehalocloud.appspot.com"
+BASE_URL = "https://platform.thetrackr.com"
 _LOGGER = logging.getLogger(__name__)
 
 
